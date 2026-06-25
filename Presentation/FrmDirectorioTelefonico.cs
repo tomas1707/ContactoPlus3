@@ -1,12 +1,16 @@
 ﻿
 
+using ContactosPlus.ApplicationCore;
+
 namespace ContactosPlus
 {
     public partial class FrmDirectorioTelefonico : Form
     {
+        private Directorio directorio;
         public FrmDirectorioTelefonico()
         {
             InitializeComponent();
+            directorio = new Directorio("contactos.txt");
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
@@ -19,7 +23,42 @@ namespace ContactosPlus
                                 if (ValidarTexBox2(txtEmpresa))
                                     if (ValidarTexBox2(txtCorreo))
                                     {
+                                        {
+                                            bool resultado = directorio.Add(
+                                                txtNombre.Text.Trim(),
+                                                txtApellidos.Text.Trim(),
+                                                txtTelefono.Text.Trim(),
+                                                txtExtension.Text.Trim(),
+                                                txtCargo.Text.Trim(),
+                                                txtEmpresa.Text.Trim(),
+                                                txtCorreo.Text.Trim(),
+                                                txtObservaciones.Text.Trim()
+                                            );
 
+                                            if (resultado)
+                                            {
+                                                dgvDirectorio.DataSource = null;
+                                                dgvDirectorio.DataSource = directorio.Show();
+
+                                                MessageBox.Show(
+                                                    "Contacto guardado correctamente.",
+                                                    "Directorio Telefónico",
+                                                    MessageBoxButtons.OK,
+                                                    MessageBoxIcon.Information
+                                                );
+
+                                                btnLimpiar_Click(sender, e);
+                                            }
+                                            else
+                                            {
+                                                MessageBox.Show(
+                                                    "No fue posible guardar el contacto.",
+                                                    "Directorio Telefónico",
+                                                    MessageBoxButtons.OK,
+                                                    MessageBoxIcon.Error
+                                                );
+                                            }
+                                        }
                                     }
         }
 
@@ -110,17 +149,44 @@ namespace ContactosPlus
 
         private void FrmDirectorioTelefonico_Load(object sender, EventArgs e)
         {
+            componentes.Add(txtId);
+            componentes.Add(txtNombre);
+            componentes.Add(txtApellidos);
+            componentes.Add(txtTelefono);
+            componentes.Add(txtExtension);
+            componentes.Add(txtCargo);
+            componentes.Add(txtEmpresa);
+            componentes.Add(txtCorreo);
 
+            //opción 1: Agregare de manera directa las columnas al DataGridView
+            dgvDirectorio.AutoGenerateColumns = true;
+            dgvDirectorio.DataSource = directorio.Show();
+
+            dgvDirectorio.Columns["estatus"].Visible = false;
+
+            //opción 2: Agregar columnas de manera manual
+            //dgvDirectorio.AutoGenerateColumns = false;
+            //dgvDirectorio.Columns.Clear();
+            //AgregarColumnaTexto("nombre", "Nombre Completo", 200);
+
+
+            txtId.Text = directorio.GenerarId().ToString();
+            txtNombre.Focus();
         }
 
-        private void txtNombre_Leave(object sender, EventArgs e)
+        private void AgregarColumnaTexto(string dataPropertyName, string headerText, int width, bool visible = true, bool readOnly = true)
         {
-            MessageBox.Show("Queeee me cambiaste por la otra");
-        }
+            DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = dataPropertyName;
+            col.HeaderText = headerText;
+            col.Width = width;
+            col.Visible = visible;
+            col.ReadOnly = readOnly;
 
-        private void txtApellidos_Leave(object sender, EventArgs e)
-        {
+            // Opcional: Centrar encabezados o aplicar estilos por defecto aquí
+            col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
+            dgvDirectorio.Columns.Add(col);
         }
     }
 }

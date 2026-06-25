@@ -1,24 +1,30 @@
 ﻿using ContactosPlus.Domain;
 
-
-
 namespace ContactosPlus.Infrastructure
 {
-
-    internal class Archivos {
-
+    internal class Archivos
+    {
         private string rutaArchivo;
 
         public Archivos(string rutaArchivo)
         {
             this.rutaArchivo = rutaArchivo;
+
+            // Crear el archivo si no existe
+            if (!File.Exists(rutaArchivo))
+            {
+                File.Create(rutaArchivo).Close();
+            }
         }
 
-        public bool add(Contacto contacto)
+        // CREATE
+        public bool Add(Contacto contacto)
         {
             try
             {
-                StreamWriter escritor = new StreamWriter(rutaArchivo, true);
+                using StreamWriter escritor =
+                    new StreamWriter(rutaArchivo, true);
+
                 escritor.WriteLine(contacto);
 
                 return true;
@@ -30,75 +36,71 @@ namespace ContactosPlus.Infrastructure
         }
 
         // READ ALL
-        public List<Contacto> show()
+        public List<Contacto> Show()
         {
             List<Contacto> lista = new List<Contacto>();
 
-            StreamReader lector = new StreamReader(rutaArchivo);
-
-            string? linea;
-
-            while ((linea = lector.ReadLine()) != null)
+            try
             {
+                using StreamReader lector =
+                    new StreamReader(rutaArchivo);
 
-                //string mismacotas = "cofee | chuky | lila | coco | chirgo";
-                //["cofee", "chu","ky", "lila", "coco", "chirgo"]
+                string? linea;
 
-                //
-                string[] datos = linea.Split('|');
+                while ((linea = lector.ReadLine()) != null)
+                {
+                    if (string.IsNullOrWhiteSpace(linea))
+                        continue;
 
-                //***(int id,
-                //string nombre,
-                //string apellidos,
-                //int telefono,
-                //int extension,
-                //string puesto,
-                //string empresa,
-                //string correo,
-                //string observaciones)
+                    string[] datos = linea.Split('|');
 
-                Contacto contacto = new Contacto(
-                    Convert.ToInt32(datos[0]), //int id
-                    datos[1], //string nombre
-                    datos[2], //string apellidos
-                    Convert.ToInt32(datos[3]), //int telefono
-                    Convert.ToInt32(datos[4]), //int extension
-                    datos[5], //strig puesto
-                    datos[6], //string empresa
-                    datos[7], //string correo
-                    datos[8] //string observaciones
-                );
+                    if (datos.Length != 10)
+                        continue;
 
-                contacto.observaciones = datos[9];
-                contacto.estatus = Convert.ToBoolean(datos[10]);
+                    Contacto contacto = new Contacto(
+                        Convert.ToInt32(datos[0]),
+                        datos[1],
+                        datos[2],
+                        datos[3],
+                        datos[4],
+                        datos[5],
+                        datos[6],
+                        datos[7],
+                        datos[8]
+                    );
 
-                lista.Add(contacto);
+                    contacto.estatus =
+                        Convert.ToBoolean(datos[9]);
+
+                    lista.Add(contacto);
+                }
+            }
+            catch
+            {
             }
 
             return lista;
         }
 
         // READ ONE
-        public Contacto? find(int id)
+        public Contacto? Find(int id)
         {
+            List<Contacto> lista = Show();
 
-            List<Contacto> directorio = show();
-
-            foreach (Contacto contacto in directorio)
-                if (contacto.id == id)
-                    return contacto;
-
-            return null;
+            return lista.FirstOrDefault(
+                c => c.id == id);
         }
 
         // UPDATE
-        public bool update(Contacto contacto)
+        public bool Update(Contacto contacto)
         {
             try
             {
-                List<Contacto> lista = show();
+                List<Contacto> lista = Show();
 
-                Contacto? actual = lista.FirstOrDefault(c => c.id == contacto.id);
+                Contacto? actual =
+                    lista.FirstOrDefault(
+                        c => c.id == contacto.id);
 
                 if (actual == null)
                     return false;
@@ -124,27 +126,20 @@ namespace ContactosPlus.Infrastructure
         }
 
         // DELETE
-        public bool delete(int id)
+        public bool Delete(int id)
         {
             try
             {
-                List<Contacto> lista = show();
+                List<Contacto> lista = Show();
 
-                Contacto contactoEncontrado = null;
+                Contacto? contacto =
+                    lista.FirstOrDefault(
+                        c => c.id == id);
 
-                foreach (Contacto contacto in lista)
-                {
-                    if (contacto.id == id)
-                    {
-                        contactoEncontrado = contacto;
-                        break;
-                    }
-                }
-
-                if (contactoEncontrado == null)
+                if (contacto == null)
                     return false;
 
-                lista.Remove(contactoEncontrado);
+                lista.Remove(contacto);
 
                 GuardarLista(lista);
 
@@ -159,16 +154,13 @@ namespace ContactosPlus.Infrastructure
         // Método privado
         private void GuardarLista(List<Contacto> lista)
         {
-            using StreamWriter escritor = new StreamWriter(rutaArchivo, false);
+            using StreamWriter escritor =
+                new StreamWriter(rutaArchivo, false);
 
             foreach (Contacto contacto in lista)
             {
                 escritor.WriteLine(contacto);
             }
         }
-
     }
-    
 }
-
-

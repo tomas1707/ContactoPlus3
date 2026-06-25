@@ -51,13 +51,13 @@
             txtObservaciones = new RichTextBox();
             chkActivo = new CheckBox();
             btnNuevo = new Button();
-            btnGuardar = new Button();
             btnEditar = new Button();
             btnEliminar = new Button();
             btnBuscar = new Button();
             btnLimpiar = new Button();
             dgvDirectorio = new DataGridView();
             error = new ErrorProvider(components);
+            btnGuardar = new Button();
             grpDatos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvDirectorio).BeginInit();
             ((System.ComponentModel.ISupportInitialize)error).BeginInit();
@@ -112,11 +112,12 @@
             // 
             // txtId
             // 
+            txtId.Enabled = false;
             txtId.Location = new Point(20, 55);
             txtId.Name = "txtId";
             txtId.ReadOnly = true;
             txtId.Size = new Size(100, 23);
-            txtId.TabIndex = 20;
+            txtId.TabIndex = 1;
             // 
             // lblNombre
             // 
@@ -132,8 +133,7 @@
             txtNombre.Location = new Point(150, 55);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(250, 23);
-            txtNombre.TabIndex = 1;
-            txtNombre.Leave += txtNombre_Leave;
+            txtNombre.TabIndex = 2;
             // 
             // lblApellidos
             // 
@@ -149,8 +149,7 @@
             txtApellidos.Location = new Point(430, 55);
             txtApellidos.Name = "txtApellidos";
             txtApellidos.Size = new Size(300, 23);
-            txtApellidos.TabIndex = 2;
-            txtApellidos.Leave += txtApellidos_Leave;
+            txtApellidos.TabIndex = 3;
             // 
             // lblTelefono
             // 
@@ -166,7 +165,7 @@
             txtTelefono.Location = new Point(20, 120);
             txtTelefono.Name = "txtTelefono";
             txtTelefono.Size = new Size(180, 23);
-            txtTelefono.TabIndex = 3;
+            txtTelefono.TabIndex = 4;
             // 
             // lblExtension
             // 
@@ -182,7 +181,7 @@
             txtExtension.Location = new Point(220, 120);
             txtExtension.Name = "txtExtension";
             txtExtension.Size = new Size(100, 23);
-            txtExtension.TabIndex = 4;
+            txtExtension.TabIndex = 5;
             // 
             // lblCargo
             // 
@@ -198,7 +197,7 @@
             txtCargo.Location = new Point(350, 120);
             txtCargo.Name = "txtCargo";
             txtCargo.Size = new Size(250, 23);
-            txtCargo.TabIndex = 5;
+            txtCargo.TabIndex = 6;
             // 
             // lblEmpresa
             // 
@@ -214,7 +213,7 @@
             txtEmpresa.Location = new Point(630, 120);
             txtEmpresa.Name = "txtEmpresa";
             txtEmpresa.Size = new Size(350, 23);
-            txtEmpresa.TabIndex = 6;
+            txtEmpresa.TabIndex = 7;
             // 
             // lblCorreo
             // 
@@ -230,7 +229,7 @@
             txtCorreo.Location = new Point(20, 185);
             txtCorreo.Name = "txtCorreo";
             txtCorreo.Size = new Size(350, 23);
-            txtCorreo.TabIndex = 7;
+            txtCorreo.TabIndex = 8;
             // 
             // lblObservaciones
             // 
@@ -246,7 +245,7 @@
             txtObservaciones.Location = new Point(400, 185);
             txtObservaciones.Name = "txtObservaciones";
             txtObservaciones.Size = new Size(450, 50);
-            txtObservaciones.TabIndex = 8;
+            txtObservaciones.TabIndex = 9;
             txtObservaciones.Text = "";
             // 
             // chkActivo
@@ -257,7 +256,7 @@
             chkActivo.Location = new Point(900, 190);
             chkActivo.Name = "chkActivo";
             chkActivo.Size = new Size(60, 19);
-            chkActivo.TabIndex = 9;
+            chkActivo.TabIndex = 10;
             chkActivo.Text = "Activo";
             // 
             // btnNuevo
@@ -265,25 +264,16 @@
             btnNuevo.Location = new Point(20, 340);
             btnNuevo.Name = "btnNuevo";
             btnNuevo.Size = new Size(120, 40);
-            btnNuevo.TabIndex = 10;
+            btnNuevo.TabIndex = 11;
             btnNuevo.Text = "Nuevo";
             btnNuevo.Click += btnNuevo_Click;
-            // 
-            // btnGuardar
-            // 
-            btnGuardar.Location = new Point(150, 340);
-            btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new Size(120, 40);
-            btnGuardar.TabIndex = 11;
-            btnGuardar.Text = "Guardar";
-            btnGuardar.Click += btnGuardar_Click;
             // 
             // btnEditar
             // 
             btnEditar.Location = new Point(280, 340);
             btnEditar.Name = "btnEditar";
             btnEditar.Size = new Size(120, 40);
-            btnEditar.TabIndex = 12;
+            btnEditar.TabIndex = 13;
             btnEditar.Text = "Editar";
             btnEditar.Click += btnEditar_Click;
             // 
@@ -292,7 +282,7 @@
             btnEliminar.Location = new Point(410, 340);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(120, 40);
-            btnEliminar.TabIndex = 13;
+            btnEliminar.TabIndex = 14;
             btnEliminar.Text = "Eliminar";
             btnEliminar.Click += btnEliminar_Click;
             // 
@@ -301,7 +291,7 @@
             btnBuscar.Location = new Point(540, 340);
             btnBuscar.Name = "btnBuscar";
             btnBuscar.Size = new Size(120, 40);
-            btnBuscar.TabIndex = 14;
+            btnBuscar.TabIndex = 15;
             btnBuscar.Text = "Buscar";
             btnBuscar.Click += btnBuscar_Click;
             // 
@@ -310,7 +300,7 @@
             btnLimpiar.Location = new Point(670, 340);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(120, 40);
-            btnLimpiar.TabIndex = 15;
+            btnLimpiar.TabIndex = 16;
             btnLimpiar.Text = "Limpiar";
             btnLimpiar.Click += btnLimpiar_Click;
             // 
@@ -323,22 +313,30 @@
             dgvDirectorio.Name = "dgvDirectorio";
             dgvDirectorio.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvDirectorio.Size = new Size(1240, 350);
-            dgvDirectorio.TabIndex = 16;
+            dgvDirectorio.TabIndex = 17;
             // 
             // error
             // 
             error.ContainerControl = this;
             // 
+            // btnGuardar
+            // 
+            btnGuardar.Location = new Point(149, 340);
+            btnGuardar.Name = "btnGuardar";
+            btnGuardar.Size = new Size(120, 40);
+            btnGuardar.TabIndex = 12;
+            btnGuardar.Text = "Guardar";
+            btnGuardar.Click += btnGuardar_Click;
+            // 
             // FrmDirectorioTelefonico
             // 
-            AcceptButton = btnGuardar;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1300, 800);
+            Controls.Add(btnGuardar);
             Controls.Add(lblTitulo);
             Controls.Add(grpDatos);
             Controls.Add(btnNuevo);
-            Controls.Add(btnGuardar);
             Controls.Add(btnEditar);
             Controls.Add(btnEliminar);
             Controls.Add(btnBuscar);
@@ -346,7 +344,7 @@
             Controls.Add(dgvDirectorio);
             Name = "FrmDirectorioTelefonico";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Directorio Telefónico Empresarial";
+            Text = "Gestor de Contactos";
             Load += FrmDirectorioTelefonico_Load;
             grpDatos.ResumeLayout(false);
             grpDatos.PerformLayout();
@@ -392,7 +390,6 @@
         private System.Windows.Forms.CheckBox chkActivo;
 
         private System.Windows.Forms.Button btnNuevo;
-        private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.Button btnEliminar;
         private System.Windows.Forms.Button btnBuscar;
@@ -400,5 +397,6 @@
 
         private System.Windows.Forms.DataGridView dgvDirectorio;
         private ErrorProvider error;
+        private Button btnGuardar;
     }
 }
