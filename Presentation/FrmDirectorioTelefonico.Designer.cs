@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             lblTitulo = new Label();
             grpDatos = new GroupBox();
+            lblPruebas = new Label();
             lblId = new Label();
             txtId = new TextBox();
             lblNombre = new Label();
@@ -58,6 +59,7 @@
             dgvDirectorio = new DataGridView();
             error = new ErrorProvider(components);
             btnGuardar = new Button();
+            button1 = new Button();
             grpDatos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvDirectorio).BeginInit();
             ((System.ComponentModel.ISupportInitialize)error).BeginInit();
@@ -75,6 +77,8 @@
             // 
             // grpDatos
             // 
+            grpDatos.Controls.Add(button1);
+            grpDatos.Controls.Add(lblPruebas);
             grpDatos.Controls.Add(lblId);
             grpDatos.Controls.Add(txtId);
             grpDatos.Controls.Add(lblNombre);
@@ -100,6 +104,15 @@
             grpDatos.TabIndex = 1;
             grpDatos.TabStop = false;
             grpDatos.Text = "Datos de Contacto";
+            // 
+            // lblPruebas
+            // 
+            lblPruebas.AutoSize = true;
+            lblPruebas.Location = new Point(820, 53);
+            lblPruebas.Name = "lblPruebas";
+            lblPruebas.Size = new Size(38, 15);
+            lblPruebas.TabIndex = 17;
+            lblPruebas.Text = "label1";
             // 
             // lblId
             // 
@@ -314,6 +327,7 @@
             dgvDirectorio.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvDirectorio.Size = new Size(1240, 350);
             dgvDirectorio.TabIndex = 17;
+            dgvDirectorio.CellClick += dgvDirectorio_CellClick;
             // 
             // error
             // 
@@ -327,6 +341,16 @@
             btnGuardar.TabIndex = 12;
             btnGuardar.Text = "Guardar";
             btnGuardar.Click += btnGuardar_Click;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(895, 55);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 18;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // FrmDirectorioTelefonico
             // 
@@ -398,5 +422,7 @@
         private System.Windows.Forms.DataGridView dgvDirectorio;
         private ErrorProvider error;
         private Button btnGuardar;
+        private Label lblPruebas;
+        private Button button1;
     }
 }

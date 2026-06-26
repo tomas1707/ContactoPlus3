@@ -22,8 +22,10 @@ namespace ContactosPlus
                      if (usuario=="admin" && pass=="1234")
                     {
                         // Abrimos la siguiente ventana (FrmDirectorioTelefonico)
-                       // MisFunciones.mensajeAlerta("Bienvenido al sistemas");
-                       FrmDirectorioTelefonico obj = new FrmDirectorioTelefonico();
+                        // MisFunciones.mensajeAlerta("Bienvenido al sistemas");
+                        txtUsuario.Clear();
+                        txtPassword.Clear();
+                        FrmDirectorioTelefonico obj = new FrmDirectorioTelefonico();
 
                         this.Hide();// ocultar login
                         obj.Show(); // mostrar contactos

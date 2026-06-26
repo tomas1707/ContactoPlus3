@@ -5,28 +5,19 @@ namespace ContactosPlus.ApplicationCore
 {
     internal class Directorio
     {
-        private Archivos archivo;
-
-        public Directorio(string rutaArchivo)
+        private List<Contacto> midirectorio;
+        public Directorio()
         {
-            archivo = new Archivos(rutaArchivo);
+            midirectorio = new List<Contacto>();
         }
 
-        // CREATE
-        public bool Add(
-            string nombre,
-            string apellidos,
-            string telefono,
-            string extension,
-            string puesto,
-            string empresa,
-            string correo,
-            string observaciones)
+        public bool Add(string nombre, string apellidos, string telefono, string extension, string puesto, string empresa, string correo, string observaciones)
         {
-            int id = GenerarId();
+            if (Existe(nombre, apellidos))
+                return false;
 
             Contacto contacto = new Contacto(
-                id,
+                NextId(),
                 nombre,
                 apellidos,
                 telefono,
@@ -34,99 +25,116 @@ namespace ContactosPlus.ApplicationCore
                 puesto,
                 empresa,
                 correo,
-                observaciones);
+                observaciones
+            );
 
-            return archivo.Add(contacto);
+            return Add(contacto);
         }
 
-        // READ ALL
+        public bool Add(Contacto contacto)
+        {
+            if (Existe(contacto.nombre, contacto.apellidos))
+                return false;
+
+            midirectorio.Add(contacto);
+
+            return true;
+        }
+
+        public bool Existe(string nombre, string apellidos)
+        {
+            foreach (Contacto c in midirectorio)
+            {
+                bool mismoNombre =
+                    c.nombre.Trim().Equals(nombre.Trim(), StringComparison.OrdinalIgnoreCase);
+
+                bool mismosApellidos =
+                    c.apellidos.Trim().Equals(apellidos.Trim(), StringComparison.OrdinalIgnoreCase);
+
+                if (mismoNombre && mismosApellidos)
+                    return true;
+            }
+
+            return false;
+        }
+
         public List<Contacto> Show()
         {
-            return archivo.Show();
+            return midirectorio;
         }
 
-        // READ ONE
         public Contacto? Find(int id)
         {
-            return archivo.Find(id);
+            foreach (Contacto contacto in midirectorio)
+            {
+                if (contacto.id == id)
+                    return contacto;
+            }
+
+            return null;
         }
 
-        // UPDATE
-        public bool Update(
-            int id,
-            string nombre,
-            string apellidos,
-            string telefono,
-            string extension,
-            string puesto,
-            string empresa,
-            string correo,
-            string observaciones,
-            bool estatus)
+        public bool Update(Contacto datos)
         {
-            Contacto? contacto = archivo.Find(id);
+            Contacto? actual = Find(datos.id);
+
+            if (actual == null)
+                return false;
+
+            actual.nombre = datos.nombre;
+            actual.apellidos = datos.apellidos;
+            actual.telefono = datos.telefono;
+            actual.extension = datos.extension;
+            actual.puesto = datos.puesto;
+            actual.empresa = datos.empresa;
+            actual.correo = datos.correo;
+            actual.observaciones = datos.observaciones;
+            actual.estatus = datos.estatus;
+
+            return true;
+        }
+
+        public bool Delete(int id)
+        {
+            Contacto? contacto = Find(id);
 
             if (contacto == null)
                 return false;
 
-            contacto.nombre = nombre;
-            contacto.apellidos = apellidos;
-            contacto.telefono = telefono;
-            contacto.extension = extension;
-            contacto.puesto = puesto;
-            contacto.empresa = empresa;
-            contacto.correo = correo;
-            contacto.observaciones = observaciones;
-            contacto.estatus = estatus;
+            midirectorio.Remove(contacto);
 
-            return archivo.Update(contacto);
+            return true;
         }
 
-        // DELETE
-        public bool Delete(int id)
+        public int NextId()
         {
-            return archivo.Delete(id);
-        }
-
-        // Obtener siguiente ID
-        public int GenerarId()
-        {
-            List<Contacto> lista = archivo.Show();
-
-            if (lista.Count == 0)
+            if (midirectorio.Count == 0)
                 return 1;
 
-            return lista.Max(c => c.id) + 1;
+            return midirectorio.Max(c => c.id) + 1;
         }
 
-        // Buscar por nombre
-        public List<Contacto> BuscarPorNombre(string nombre)
+        public void Clear()
         {
-            return archivo.Show()
-                          .Where(c =>
-                              c.nombre.Contains(
-                                  nombre,
-                                  StringComparison.OrdinalIgnoreCase))
-                          .ToList();
+            midirectorio.Clear();
         }
 
-        // Buscar por empresa
-        public List<Contacto> BuscarPorEmpresa(string empresa)
+        public int GenerarId()
         {
-            return archivo.Show()
-                          .Where(c =>
-                              c.empresa.Contains(
-                                  empresa,
-                                  StringComparison.OrdinalIgnoreCase))
-                          .ToList();
-        }
+            if (midirectorio.Count == 0)
+                return 1;
 
-        // Obtener solamente activos
-        public List<Contacto> ObtenerActivos()
-        {
-            return archivo.Show()
-                          .Where(c => c.estatus)
-                          .ToList();
+            int mayor = midirectorio[0].id;
+
+            foreach (Contacto contacto in midirectorio)
+            {
+                if (contacto.id > mayor)
+                {
+                    mayor = contacto.id;
+                }
+            }
+
+            return mayor + 1;
         }
     }
 }
