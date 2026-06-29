@@ -8,7 +8,7 @@ namespace ContactosPlus.Infrastructure
         private string msgError;
 
         //Constructor de la clase Archivos
-        public Archivos(string rutaArchivo)
+        public Archivos2(string rutaArchivo)
         {
             this.rutaArchivo = rutaArchivo;
 
@@ -143,7 +143,7 @@ namespace ContactosPlus.Infrastructure
 
                 directorio.Remove(contacto);
 
-                GuardarDirectorio(directorio);
+                GuardarDirectorio(directorio)
 
                 return true;
             }

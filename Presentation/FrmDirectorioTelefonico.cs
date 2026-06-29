@@ -14,7 +14,7 @@ namespace ContactosPlus
         {
             InitializeComponent();
             directorio = new Directorio();
-            miArchivo = new Archivos("Directorio.txt");
+            miarchivo = new Archivos("Directorio.txt");
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
@@ -80,7 +80,7 @@ namespace ContactosPlus
             error.SetError(componente, esValido ? "" : mensaje);
 
             if (!esValido)
-                componente.Focus();
+                componente.Focus()
 
             return esValido;
         }
@@ -122,7 +122,7 @@ namespace ContactosPlus
                     break;
                 case "warning":
                     icono = MessageBoxIcon.Warning;
-                    break;
+                   
                 default:
                     icono = MessageBoxIcon.Information;
                     break;
@@ -161,7 +161,7 @@ namespace ContactosPlus
             componentes.Add(txtTelefono);
             componentes.Add(txtExtension);
             componentes.Add(txtCargo);
-            componentes.Add(txtEmpresa);
+            componentes.add(txtEmpresa);
             componentes.Add(txtCorreo);
 
             //opción 1: Agregare de manera directa las columnas al DataGridView

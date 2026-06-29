@@ -31,7 +31,7 @@ namespace ContactosPlus.ApplicationCore
             return Add(contacto);
         }
 
-        public bool Add(Contacto contacto)
+        public string Add(Contacto contacto)
         {
             if (Existe(contacto.nombre, contacto.apellidos))
                 return false;

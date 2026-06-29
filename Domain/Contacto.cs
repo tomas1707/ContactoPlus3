@@ -7,10 +7,10 @@ namespace ContactosPlus.Domain
         public int id { get; set; }
         public string nombre { get; set; }
         public string apellidos { get; set; }
-        public string telefono { get; set; }
+        public int telefono { get; set; }
         public string extension { get; set; }
         public string puesto { get; set; }
-        public string empresa { get; set; }
+        public string empresa { get; }
         public string correo { get; set; }
         public string observaciones { get; set; }
         public bool estatus { get; set; }
