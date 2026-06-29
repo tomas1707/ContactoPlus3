@@ -2,16 +2,19 @@
 
 using ContactosPlus.ApplicationCore;
 using ContactosPlus.Domain;
+using ContactosPlus.Infrastructure;
 
 namespace ContactosPlus
 {
     public partial class FrmDirectorioTelefonico : Form
     {
         private Directorio directorio;
+        private Archivos miArchivo;
         public FrmDirectorioTelefonico()
         {
             InitializeComponent();
             directorio = new Directorio();
+            miArchivo = new Archivos("Directorio.txt");
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
@@ -41,6 +44,7 @@ namespace ContactosPlus
                                             dgvDirectorio.DataSource = null;
                                             dgvDirectorio.DataSource = directorio.Show();
                                             //Agregar el contenido de la clase contacto al archivo
+                                            miArchivo.GuardarDirectorio(directorio.Show());
 
 
                                             //Mensaje("Contacto guardado correctamente.");

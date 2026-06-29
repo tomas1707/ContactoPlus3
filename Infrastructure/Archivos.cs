@@ -5,7 +5,9 @@ namespace ContactosPlus.Infrastructure
     internal class Archivos
     {
         private string rutaArchivo;
+        private string msgError;
 
+        //Constructor de la clase Archivos
         public Archivos(string rutaArchivo)
         {
             this.rutaArchivo = rutaArchivo;
@@ -17,33 +19,44 @@ namespace ContactosPlus.Infrastructure
             }
         }
 
-        // CREATE
-        public bool Add(Contacto contacto)
+        //Método para guardar un contacto al archivo a partor de los datos de la clase Contacto
+        public bool GuardarContacto(Contacto contacto)
         {
             try
             {
-                using StreamWriter escritor =
-                    new StreamWriter(rutaArchivo, true);
-
+                using StreamWriter escritor =  new StreamWriter(rutaArchivo, true);
                 escritor.WriteLine(contacto);
-
                 return true;
             }
-            catch
+            catch (Exception e) 
             {
+                msgError = e.Message;
                 return false;
             }
         }
 
-        // READ ALL
-        public List<Contacto> Show()
+        //Método para guardar en el archivo, todos los contactor que estén registrados en el directorio
+        public void GuardarDirectorio(List<Contacto> directorio)
+        {
+            try
+            {
+                using StreamWriter escritor = new StreamWriter(rutaArchivo, false);
+            }
+            catch (Exception e)
+            {
+                msgError = e.Message;
+            }
+
+        }
+
+        //Método que extrae todos los contactos del archivo y lo devuelve en la lista directorio.
+        public List<Contacto> MostrarDirectorio()
         {
             List<Contacto> lista = new List<Contacto>();
 
             try
             {
-                using StreamReader lector =
-                    new StreamReader(rutaArchivo);
+                using StreamReader lector = new StreamReader(rutaArchivo);
 
                 string? linea;
 
@@ -58,49 +71,39 @@ namespace ContactosPlus.Infrastructure
                         continue;
 
                     Contacto contacto = new Contacto(
-                        Convert.ToInt32(datos[0]),
-                        datos[1],
-                        datos[2],
-                        datos[3],
-                        datos[4],
-                        datos[5],
-                        datos[6],
-                        datos[7],
-                        datos[8]
+                        Convert.ToInt32(datos[0]), //int id
+                        datos[1], //string nombre
+                        datos[2], //string apellidos
+                        datos[3], //string telefono
+                        datos[4], //string extension
+                        datos[5], //string puesto
+                        datos[6], //string empresa
+                        datos[7], //string correo
+                        datos[8] //string observaciones 
                     );
 
-                    contacto.estatus =
-                        Convert.ToBoolean(datos[9]);
+                    contacto.estatus = Convert.ToBoolean(datos[9]);
 
                     lista.Add(contacto);
                 }
             }
-            catch
+            catch (Exception e)
             {
+                msgError = e.Message;
             }
 
             return lista;
         }
 
-        // READ ONE
-        public Contacto? Find(int id)
-        {
-            List<Contacto> lista = Show();
-
-            return lista.FirstOrDefault(
-                c => c.id == id);
-        }
-
-        // UPDATE
-        public bool Update(Contacto contacto)
+        //Método que extrae todos los contactos del archivo y los carga en la lista directorio
+        //Posteriormente buscar el conacto, lo actualiza y finalmente guarda los cambios en el archivo.
+        public bool ActualizarContacto(Contacto contacto)
         {
             try
             {
-                List<Contacto> lista = Show();
+                List<Contacto> directorio = MostrarDirectorio();
 
-                Contacto? actual =
-                    lista.FirstOrDefault(
-                        c => c.id == contacto.id);
+                Contacto? actual = directorio.FirstOrDefault(c => c.id == contacto.id);
 
                 if (actual == null)
                     return false;
@@ -115,52 +118,111 @@ namespace ContactosPlus.Infrastructure
                 actual.observaciones = contacto.observaciones;
                 actual.estatus = contacto.estatus;
 
-                GuardarLista(lista);
+                GuardarDirectorio(directorio);
 
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                msgError = e.Message;
                 return false;
             }
         }
 
-        // DELETE
-        public bool Delete(int id)
+        //Método para eliminar un contacto del archivo
+        public bool EliminarContacto(int id)
         {
             try
             {
-                List<Contacto> lista = Show();
+                List<Contacto> directorio = MostrarDirectorio();
 
-                Contacto? contacto =
-                    lista.FirstOrDefault(
-                        c => c.id == id);
+                Contacto? contacto = directorio.FirstOrDefault( c => c.id == id);
 
                 if (contacto == null)
                     return false;
 
-                lista.Remove(contacto);
+                directorio.Remove(contacto);
 
-                GuardarLista(lista);
+                GuardarDirectorio(directorio);
 
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                msgError = e.Message;
                 return false;
             }
         }
 
-        // Método privado
-        private void GuardarLista(List<Contacto> lista)
+        //Método para eliminar el archivo que contiene el directorio de contactos.
+        public bool EliminarArchivo()
         {
-            using StreamWriter escritor =
-                new StreamWriter(rutaArchivo, false);
-
-            foreach (Contacto contacto in lista)
+            try
             {
-                escritor.WriteLine(contacto);
+                if (File.Exists(rutaArchivo))
+                {
+                    File.Delete(rutaArchivo);
+                    return true;
+                }
+                return false;
             }
+            catch (Exception e)
+            {
+                msgError = e.Message;
+                return false;
+            }
+        }
+
+        //Método para renombrar el archivo del directorio de contacto.
+        public bool RenombrarArchivo(string nuevoNombre)
+        {
+            try
+            {
+                if (!File.Exists(rutaArchivo)) return false;
+
+                string? directorio = Path.GetDirectoryName(rutaArchivo);
+                string nuevaRuta = Path.Combine(directorio ?? "", nuevoNombre);
+
+                File.Move(rutaArchivo, nuevaRuta);
+                rutaArchivo = nuevaRuta; // Actualizamos el estado interno de la clase
+                return true;
+            }
+            catch (Exception e)
+            {
+                msgError = e.Message;
+                return false;
+            }
+        }
+
+        //Método para mover de ruta, el archivo del directorio de contactos.
+        public bool MoverArchivo(string nuevaRutaCompleta)
+        {
+            try
+            {
+                if (!File.Exists(rutaArchivo)) return false;
+
+                // Asegurar que el directorio de destino exista
+                string? nuevoDirectorio = Path.GetDirectoryName(nuevaRutaCompleta);
+                if (!string.IsNullOrEmpty(nuevoDirectorio) && !Directory.Exists(nuevoDirectorio))
+                {
+                    Directory.CreateDirectory(nuevoDirectorio);
+                }
+
+                File.Move(rutaArchivo, nuevaRutaCompleta);
+                rutaArchivo = nuevaRutaCompleta; // Actualizamos la referencia interna
+                return true;
+            }
+            catch (Exception e)
+            {
+                msgError = e.Message;
+                return false;
+            }
+        }
+
+        //Método para extraer el mensaje de error en caso de que exista alguno.
+        public string getError()
+        {
+            return this.msgError;
         }
     }
 }
